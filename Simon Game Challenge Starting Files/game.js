@@ -8,10 +8,10 @@ const gamePattern = [];
 const userPattern = [];
 
 const sounds = {
-    'red': new Audio('sounds/red.mp3'),
-    'blue': new Audio('sounds/blue.mp3'),
-    'green': new Audio('sounds/green.mp3'),
-    'yellow': new Audio('sounds/yellow.mp3')
+    'red': 'sounds/red.mp3',
+    'blue': 'sounds/blue.mp3',
+    'green': 'sounds/green.mp3',
+    'yellow': 'sounds/yellow.mp3'
 }
 
 // The set of colors of all the buttons 
@@ -38,9 +38,14 @@ function nextSequence() {
 
 
 $(".btn").on("click", function() {
-    const userChosenColor = this.id;
+    const userChosenColor = $(this).attr("id");
+
+    
 
     userPattern.push(userChosenColor);
+
+    // Play sound
+    playSound(userChosenColor);
 
     // Check whether userPattern matches game pattern
     if (gamePattern.length === userPattern.length) {
@@ -58,21 +63,22 @@ $(".btn").on("click", function() {
             setTimeout(function() {
                 // Move on to next round 
                 nextSequence();
-            }, 600);
+            }, 900);
 
         }
     }
 
-    // Play sound
-    playSound(userChosenColor);
-
     // Animate
     animatePress(userChosenColor);
+
+    
+
+    
 })
 
 function playSound(name) {
-    // Play sound
-    sounds[name].play();
+    let audio = new Audio(sounds[name]);
+    audio.play();
 }
 
 function animatePress(currentColor) {
