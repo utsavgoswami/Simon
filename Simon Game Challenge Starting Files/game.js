@@ -2,6 +2,13 @@
 // "win" the level
 const gamePattern = [];
 
+const sounds = {
+    'red': new Audio('sounds/red.mp3'),
+    'blue': new Audio('sounds/blue.mp3'),
+    'green': new Audio('sounds/green.mp3'),
+    'yellow': new Audio('sounds/yellow.mp3')
+}
+
 // The set of colors of all the buttons 
 const buttonColors = ["red", "blue", "green", "yellow"];
 
@@ -17,12 +24,30 @@ function nextSequence() {
     // Temporary Fade Animation
     chosenButton.fadeOut(100).fadeIn(100);
     
-    // Play sound
-    new Audio("sounds/" + randomChosenColor + ".mp3").play();
+    playSound(randomChosenColor);
 }
 
 
-// Step 4
 $(".btn").on("click", function() {
     const userChosenColor = this.id;
+
+    // Play sound
+    playSound(userChosenColor);
+
+    // Animate
+    animatePress(userChosenColor);
 })
+
+function playSound(name) {
+    // Play sound
+    sounds[name].play();
+}
+
+function animatePress(currentColor) {
+    const btn = $("." + currentColor);
+    btn.addClass("pressed");
+
+    setTimeout(function() {
+        btn.removeClass("pressed");
+    }, 100);
+}
