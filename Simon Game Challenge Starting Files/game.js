@@ -24,7 +24,7 @@ const sounds = {
 
 
 // Randomly generates & displays the next move that the user must perform
-function nextSequence() {
+const nextSequence = () => {
 
     // Updates the level heading to the number of the new level 
     ++level;
@@ -63,10 +63,7 @@ $(".btn").on("click", function() {
             // Reset pattern position 
             patternPos = 0;
 
-            setTimeout(function() {
-                // Move on to next round
-                nextSequence();
-            }, 900);
+            setTimeout(() => { nextSequence(); }, 900);
         }
     } else {
         animateWhenUserIsWrong();
@@ -75,7 +72,7 @@ $(".btn").on("click", function() {
     }
 })
 
-function startOver() {
+const startOver = () => {
     // Reset the values of level, gamePattern, & started 
     level = 0;
     gamePattern.length = 0;
@@ -83,32 +80,28 @@ function startOver() {
     patternPos = 0;
 }
 
-function animateWhenUserIsWrong() {
+const animateWhenUserIsWrong = () => {
     playSound("wrong");
 
     const body = $("body");
     body.addClass("game-over");
 
-    setTimeout(function() {
-        body.removeClass("game-over");
-    }, 200);
+    setTimeout(() => { body.removeClass("game-over"); }, 200);
 }
 
-function playSound(name) {
+const playSound = name => {
     let audio = new Audio(sounds[name]);
     audio.play();
 }
 
-function animatePress(currentColor) {
+const animatePress = currentColor => {
     const btn = $("." + currentColor);
     btn.addClass("pressed");
 
-    setTimeout(function() {
-        btn.removeClass("pressed");
-    }, 100);
+    setTimeout(() => { btn.removeClass("pressed"); }, 100);
 }
 
-$(document).keydown(function (event) {
+$(document).keydown(event => {
 
     // For starting the game 
     if (!gameStarted) {
