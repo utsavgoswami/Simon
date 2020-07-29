@@ -1,31 +1,40 @@
-// The pattern that the user needs to match in order to 
-// "win" the level
+
 
 let gameStarted = false;
 let level = 0;
 
+
+// The sequence of patterns the user needs to match in order to 
+// "win" the current level
 const gamePattern = [];
-const userPattern = [];
+
+// The position of the gamePattern array where the button the user needs to press correctly resides
+let patternPos = 0; 
+
+// The set of colors of all the buttons 
+const buttonColors = ["red", "blue", "green", "yellow"];
 
 const sounds = {
     'red': 'sounds/red.mp3',
     'blue': 'sounds/blue.mp3',
     'green': 'sounds/green.mp3',
-    'yellow': 'sounds/yellow.mp3'
+    'yellow': 'sounds/yellow.mp3',
+    'wrong': 'sounds/wrong.mp3'
 }
 
-// The set of colors of all the buttons 
-const buttonColors = ["red", "blue", "green", "yellow"];
 
-// Randomly generates the next move that the user must perform
+// Randomly generates & displays the next move that the user must perform
 function nextSequence() {
-    ++level;
 
+    // Updates the level heading to the number of the new level 
+    ++level;
     $("h1").text("Level " + level);
 
+    // Choose a random button to press using random indexing
     const randomNumber = Math.floor(Math.random() * 4);
     const randomChosenColor = buttonColors[randomNumber];
 
+    // Push this pattern into the sequence of patterns the user must match
     gamePattern.push(randomChosenColor);
 
     const chosenButton = $("." + randomChosenColor);
@@ -36,45 +45,54 @@ function nextSequence() {
     playSound(randomChosenColor);
 }
 
-
+// Controls the flow of action when a user presses any of the buttons
 $(".btn").on("click", function() {
+
+    // Get the color of the button the user presses
     const userChosenColor = $(this).attr("id");
 
-    
-
-    userPattern.push(userChosenColor);
-
-    // Play sound
     playSound(userChosenColor);
-
-    // Check whether userPattern matches game pattern
-    if (gamePattern.length === userPattern.length) {
-        let totalMatches = 0;
-        for (let i = 0; i < gamePattern.length; i++) {
-            if (gamePattern[i] === userPattern[i]) {
-                ++totalMatches;
-            }
-        }
-
-        if (totalMatches === gamePattern.length) {
-            // Reset user pattern history
-            userPattern.length = 0;
-
-            setTimeout(function() {
-                // Move on to next round 
-                nextSequence();
-            }, 900);
-
-        }
-    }
-
-    // Animate
     animatePress(userChosenColor);
 
-    
+    if (gameStarted && userChosenColor === gamePattern[patternPos]) {
+        // Move pattern position to the next pattern the user needs to match
+        ++patternPos;
+            
+        // User has successfully matched the pattern
+        if (patternPos === gamePattern.length) {
+            // Reset pattern position 
+            patternPos = 0;
 
-    
+            setTimeout(function() {
+                // Move on to next round
+                nextSequence();
+            }, 900);
+        }
+    } else {
+        animateWhenUserIsWrong();
+        $("h1").text("Game Over, Press Any Key to Restart");
+        startOver();
+    }
 })
+
+function startOver() {
+    // Reset the values of level, gamePattern, & started 
+    level = 0;
+    gamePattern.length = 0;
+    gameStarted = false;
+    patternPos = 0;
+}
+
+function animateWhenUserIsWrong() {
+    playSound("wrong");
+
+    const body = $("body");
+    body.addClass("game-over");
+
+    setTimeout(function() {
+        body.removeClass("game-over");
+    }, 200);
+}
 
 function playSound(name) {
     let audio = new Audio(sounds[name]);
