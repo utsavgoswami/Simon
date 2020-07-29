@@ -67,7 +67,7 @@ $(".btn").on("click", function() {
         }
     } else {
         animateWhenUserIsWrong();
-        $("h1").text("Game Over, Press Any Key to Restart");
+        $("h1").text("Game Over! Press Any Key to Restart");
         startOver();
     }
 })
