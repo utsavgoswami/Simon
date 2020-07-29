@@ -101,6 +101,7 @@ const animatePress = currentColor => {
     setTimeout(() => { btn.removeClass("pressed"); }, 100);
 }
 
+// Whenever a keyboard button is pressed
 $(document).keydown(event => {
 
     // For starting the game 
